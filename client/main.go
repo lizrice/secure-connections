@@ -2,7 +2,6 @@ package main
 
 import (
 	"crypto/tls"
-	"crypto/x509"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -13,7 +12,7 @@ import (
 
 func main() {
 	client := getClient()
-	resp, err := client.Get("https://liz-server:8080")
+	resp, err := client.Get("http://liz-server:8080")
 	must(err)
 
 	defer resp.Body.Close()
@@ -24,16 +23,9 @@ func main() {
 }
 
 func getClient() *http.Client {
-	cp := x509.NewCertPool()
-	data, _ := ioutil.ReadFile("../ca/minica.pem")
-	cp.AppendCertsFromPEM(data)
-
-	// c, _ := tls.LoadX509KeyPair("signed-cert", "key")
 
 	config := &tls.Config{
-		// Certificates: []tls.Certificate{c},
-		RootCAs:               cp,
-		GetClientCertificate:  utils.ClientCertReqFunc("cert.pem", "key.pem"),
+		GetClientCertificate:  utils.ClientCertReqFunc("", ""),
 		VerifyPeerCertificate: utils.CertificateChains,
 	}
 
@@ -52,11 +44,9 @@ func must(err error) {
 	}
 }
 
-// fmt.Println("Certificate authority:")
-// must(utils.OutputPEMFile("../ca/cert"))
 // cp, _ := x509.SystemCertPool() or
 // cp := x509.NewCertPool()
-// data, _ := ioutil.ReadFile("../ca/cert")
+// data, _ := ioutil.ReadFile("../ca/minica.pem")
 // cp.AppendCertsFromPEM(data)
 
 // fmt.Println("My certificate:")

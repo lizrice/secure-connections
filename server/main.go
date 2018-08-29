@@ -2,9 +2,7 @@ package main
 
 import (
 	"crypto/tls"
-	"crypto/x509"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"os"
 
@@ -14,7 +12,7 @@ import (
 func main() {
 	server := getServer()
 	http.HandleFunc("/", myHandler)
-	must(server.ListenAndServeTLS("", ""))
+	must(server.ListenAndServe())
 }
 
 func myHandler(w http.ResponseWriter, r *http.Request) {
@@ -23,17 +21,9 @@ func myHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getServer() *http.Server {
-	cp := x509.NewCertPool()
-	data, _ := ioutil.ReadFile("../ca/minica.pem")
-	cp.AppendCertsFromPEM(data)
-
-	// c, _ := tls.LoadX509KeyPair("cert.pem", "key.pem")
 
 	tls := &tls.Config{
-		// Certificates:          []tls.Certificate{c},
-		ClientCAs:             cp,
-		ClientAuth:            tls.RequireAndVerifyClientCert,
-		GetCertificate:        utils.CertReqFunc("cert.pem", "key.pem"),
+		GetCertificate:        utils.CertReqFunc("", ""),
 		VerifyPeerCertificate: utils.CertificateChains,
 	}
 
@@ -51,25 +41,8 @@ func must(err error) {
 	}
 }
 
-// cert := "cert"
-// fmt.Println("My certificate:")
-// must(utils.OutputPEMFile(cert))
-// c, _ = tls.LoadX509KeyPair(cert, "key")
-
-// fmt.Println("Certificate authority:")
-// must(utils.OutputPEMFile("../ca/cert"))
-// cp, _ := x509.SystemCertPool()
-// data, _ := ioutil.ReadFile("../ca/cert")
-// cp.AppendCertsFromPEM(data)
-
 // NoClientCert ClientAuthType = iota
 // RequestClientCert
 // RequireAnyClientCert
 // VerifyClientCertIfGiven
 // RequireAndVerifyClientCert
-
-// RootCAs:               cp,
-// ClientCAs:             cp,
-// VerifyPeerCertificate: utils.CertificateChains,
-// GetCertificate:        getCert,
-// GetClientCertificate:  getClientCert,
