@@ -10,3 +10,9 @@
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+
+# Keys and certificates
+*.pem
+
+# Initial working 
+working/
