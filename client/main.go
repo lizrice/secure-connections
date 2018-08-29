@@ -5,19 +5,14 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
-
-	"github.com/lizrice/secure-connections/utils"
 )
 
 func main() {
 	client := getClient()
-	resp, err := client.Get("http://liz-server:8080")
-	must(err)
+	resp, _ := client.Get("http://liz-server:8080")
 
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	must(err)
+	body, _ := ioutil.ReadAll(resp.Body)
 
 	fmt.Printf("Status: %s  Body: %s\n", resp.Status, string(body))
 }
@@ -25,8 +20,8 @@ func main() {
 func getClient() *http.Client {
 
 	config := &tls.Config{
-		GetClientCertificate:  utils.ClientCertReqFunc("", ""),
-		VerifyPeerCertificate: utils.CertificateChains,
+		// GetClientCertificate:  utils.ClientCertReqFunc("",""),
+		// VerifyPeerCertificate: utils.CertificateChains,
 	}
 
 	client := &http.Client{
@@ -35,13 +30,6 @@ func getClient() *http.Client {
 		},
 	}
 	return client
-}
-
-func must(err error) {
-	if err != nil {
-		fmt.Printf("Client error: %v\n", err)
-		os.Exit(1)
-	}
 }
 
 // cp, _ := x509.SystemCertPool() or
@@ -56,3 +44,10 @@ func must(err error) {
 // InsecureSkipVerify: true,
 // RootCAs:               cp,
 // Certificates:          []tls.Certificate{c},
+
+// func must(err error) {
+// 	if err != nil {
+// 		fmt.Printf("Client error: %v\n", err)
+// 		os.Exit(1)
+// 	}
+// }

@@ -4,15 +4,12 @@ import (
 	"crypto/tls"
 	"fmt"
 	"net/http"
-	"os"
-
-	"github.com/lizrice/secure-connections/utils"
 )
 
 func main() {
 	server := getServer()
 	http.HandleFunc("/", myHandler)
-	must(server.ListenAndServe())
+	server.ListenAndServe()
 }
 
 func myHandler(w http.ResponseWriter, r *http.Request) {
@@ -23,8 +20,8 @@ func myHandler(w http.ResponseWriter, r *http.Request) {
 func getServer() *http.Server {
 
 	tls := &tls.Config{
-		GetCertificate:        utils.CertReqFunc("", ""),
-		VerifyPeerCertificate: utils.CertificateChains,
+		// GetCertificate:        utils.CertReqFunc("",""),
+		// VerifyPeerCertificate: utils.CertificateChains,
 	}
 
 	server := &http.Server{
@@ -34,15 +31,15 @@ func getServer() *http.Server {
 	return server
 }
 
-func must(err error) {
-	if err != nil {
-		fmt.Printf("Server error: %v\n", err)
-		os.Exit(1)
-	}
-}
-
 // NoClientCert ClientAuthType = iota
 // RequestClientCert
 // RequireAnyClientCert
 // VerifyClientCertIfGiven
 // RequireAndVerifyClientCert
+
+// func must(err error) {
+// 	if err != nil {
+// 		fmt.Printf("Server error: %v\n", err)
+// 		os.Exit(1)
+// 	}
+// }

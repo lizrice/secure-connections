@@ -24,7 +24,6 @@ func CertificateChains(rawCerts [][]byte, chains [][]*x509.Certificate) error {
 		fmt.Println("Verified certificate chain from peer:")
 
 		for _, v := range chains {
-			// fmt.Printf("Chain %d:\n", j)
 			for i, cert := range v {
 				fmt.Printf("  Cert %d:\n", i)
 				fmt.Printf(CertificateInfo(cert))
